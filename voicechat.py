@@ -7,7 +7,7 @@ from multiprocessing import Process, Queue
 
 
 def send_data(q, s):
-    HOST = ("192.168.2.108", 8080)
+    HOST = ("192.168.2.121", 8080)
     # print("sending")
     while not q.empty():
         print("sending")
