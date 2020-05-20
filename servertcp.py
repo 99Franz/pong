@@ -6,21 +6,20 @@ from scipy.io.wavfile import write
 from multiprocessing import Queue, Process
 import time
 
+
 def receive(q, s):
-    msg= 1
-    s.settimeout(5)
+    msg = 1
+    s.settimeout(20)
 
     data = b''
     arrcount = 0
 
     try: 
-        while msg: # and arrcount<75:
+        while msg:
             arrcount += 1
             msg = s.recvfrom(4385)[0]
             x = pickle.loads(msg)
             print(x.shape)
-            # print(arrcount)
-            # arr.append(x)
             q.put(x)
 
     except socket.timeout:
@@ -52,7 +51,7 @@ if __name__ == "__main__":
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("192.168.2.108", 8080))
-    sock.settimeout(5)
+    sock.settimeout(20)
 
     queue = Queue()
     # information_array = []
@@ -63,9 +62,9 @@ if __name__ == "__main__":
     recv_proc = Process(target=receive, args=(queue, sock))
     recv_proc.start()
     # time.sleep(1)
-    # while queue.empty() or queue.qsize() > 35:
-    #     print("waiting")
-    time.sleep(6)
+    while queue.empty(): # or queue.qsize() > 35:
+        print("waiting")
+        time.sleep(6)
     while not queue.empty():
         print("playing voice")
         play_proc = Process(target=play_voice, args=(queue, fs))
