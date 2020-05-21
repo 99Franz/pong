@@ -7,13 +7,17 @@ from multiprocessing import Process, Queue
 import numpy as np
 import keyboard
 
+
+RECV_HOST = ("192.168.2.108", 8080)
+SEND_HOST = ("192.168.2.108", 8080)
+
+
 def send_data(q, s):
-    HOST = ("192.168.2.108", 8080)
     # print("sending")
     while not q.empty():
         print("sending")
         # s.sendall(q.get())
-        s.sendto(q.get(), HOST)
+        s.sendto(q.get(), SEND_HOST)
 
 
 def record_stream(q):
@@ -114,11 +118,9 @@ def handle_sending():
 
 def handle_receiving():
     fs = 20000
-
-
     # while time.perf_counter() - start < 30:
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind(("192.168.2.108", 8080))
+    sock.bind(RECV_HOST)
     sock.settimeout(20)
 
     queue = Queue()
