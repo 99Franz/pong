@@ -6,6 +6,7 @@ import socket
 from multiprocessing import Process, Queue
 import numpy as np
 import keyboard
+import zlib
 
 
 RECV_HOST = ("192.168.2.108", 8080)
@@ -31,8 +32,9 @@ def record_stream(q):
             if status:
                 print(status)
             data = pickle.dumps(indata)
+            compressed_data = zlib.compress(data, 9)
             print("Länge: ", len(data))
-            q.put(data)
+            q.put(compressed_data)
             print(indata.shape)
 
         keyboard.wait("k")
@@ -59,7 +61,8 @@ def receive(q, s):
         while msg:
             arrcount += 1
             msg = s.recvfrom(4385)[0]
-            x = pickle.loads(msg)
+            decompressed_msg = zlib.decompress(msg)
+            x = pickle.loads(decompressed_msg)
             print("receiving")
             print(x.shape)
             q.put(x)
