@@ -1,6 +1,6 @@
 cffi==1.14.0
 keyboard==0.13.5
-numpy==1.18.4
+numpy==1.22.0
 pycparser==2.20
 scipy==1.4.1
 sounddevice==0.3.15
